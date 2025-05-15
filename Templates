@@ -1,0 +1,502 @@
+<!-- BASE HOME PAGE -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='sohome.css') }}">
+    <title>App (Base Version)</title>
+</head>
+<body>
+    <div class="nav">
+        <div class="brand">
+            <h1>InternMate</h1>
+        </div>
+        <div class="tabs">
+            <ul>
+                <li><a href="{{url_for('home') }}">Home</a></li> <!--Home-->
+                <li><a href="{{url_for('message') }}">Message</a></li> <!--Message-->
+                <li><a href="{{url_for('application') }}">Applications</a></li> <!--Applications-->
+                <li><a href="{{url_for('history') }}">History</a></li> <!--History-->
+            </ul>
+        </div>
+        <div class="profile">
+            <a href="{{url_for('login') }}">    
+                <img src="{{ url_for('static', filename='assets/profile blank.jpg')}}" alt="profile pic">
+            </a>
+            <ul><li><a href="{{url_for('login') }}">Login/Register</a></li></ul>
+        </div>
+    </div>
+    <div class="search_bar">
+        <form method="POST" action="{{ url_for('search') }}">
+            <input type="text" name="query" placeholder="Search...">
+            <button type="submit">Search</button> <!--! Search button should take user to the search page and show the results-->
+        </form>
+    </div>
+    <div class="results">
+        <ul>
+            {% if results and results| length > 0 %}    
+                {% for result in results %}
+                    <li>
+                        <strong>{{ result.job }}</strong> at {{ result.company }} ({{ result.location }})<br>
+                        <a href="{{ result.url }}" target="_blank">View Job</a> | Posted: {{ result.posted }}
+                    </li>
+                {% endfor %}
+            {% else %} 
+                <li>No results found</li>
+            {% endif %}
+        </ul>
+    </div>
+</body>
+</html>
+
+<!-- USERS HOME PAGE -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App (User Version)</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='sihome.css') }}">
+</head>
+<body>
+    <div class="nav">
+        <div class="brand">
+            <h1>InternMate</h1>
+        </div>
+        <div class="tabs">
+            <ul>
+                <li><a href="{{url_for('home') }}">Home</a></li> <!--Home-->
+                <li><a href="{{url_for('message') }}">Message</a></li> <!--Message-->
+                <li><a href="{{url_for('application') }}">Applications</a></li> <!--Applications-->
+                <li><a href="{{url_for('history') }}">History</a></li> <!--History-->
+            </ul>
+        </div>
+        <div class="profile">
+            <a href="{{url_for('profile') }}">    
+                <img src="{{ url_for('static', filename='assets/profile blank.jpg')}}" alt="profile pic">
+            </a>
+            <ul><li><a href="{{url_for('profile') }}">{{ user.username }}</a></li></ul>
+        </div>
+    </div>
+    <div class="search_bar">
+        <form method="POST" action="{{ url_for('search') }}">
+            <input type="text" name="query" placeholder="Search...">
+            <button type="submit">Search</button> <!--! Search button should take user to the search page and show the results-->
+        </form>
+    </div>
+    <div class="application">
+        <!--Random internships go here-->
+    </div>
+</body>
+</html>
+
+<!-- LOGIN/REGISTRATION PAGE -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login or Register</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='auth.css')}}">
+    <script>
+        function showForm(formId) {
+            document.getElementById('login-form').classList.remove('active');
+            document.getElementById('register-form').classList.remove('active');
+            document.getElementById(formId).classList.add('active');
+        }
+    </script>
+</head>
+<body>
+    <div class="header">
+        <div class="title">
+            <h1>Login or Register</h1>            
+        </div>
+        <div class="home">
+            <ul><li><a href="{{url_for('home') }}">Home</a></li></ul>
+        </div>
+    </div>
+    <div class="logreg_button">
+        <button onclick="showForm('login-form')">Login</button>
+        <button onclick="showForm('register-form')">Register</button>
+    </div>
+
+    <div class="forms">
+        <div id="login-form" class="form-container {% if form_type == 'login' %}active{% endif %}">
+            <form method="POST">
+                <input type="hidden" name="form_type" value="login">
+                <h2>Login</h2>
+                <label>Username:</label>
+                <input type="text" name="username" required>
+                <br>
+                <label>Password: </label>
+                <input type="password" name="password" required>
+                <br>
+                <button type="submit">Login</button>
+            </form>
+            <p>
+                <a href="{{ url_for('forgot_password') }}">Forgot/Change Password?</a>
+            </p>            
+        </div>
+
+        <div id="register-form" class="form-container {% if form_type == 'register' %}active{% endif %}">
+            <form method="POST">
+                <input type="hidden" name="form_type" value="register">
+                <h2>Register</h2>
+                <label>First Name:</label>
+                <input type="text" name="first_name" required>
+                <br>
+                <label>Last Name:</label>
+                <input type="text" name="last_name" required>
+                <br>
+                <label>Email:</label>
+                <input type="email" name="email" required> 
+                <label>Degree:</label>
+                <input type="text" name="degree" required>
+                <br>
+                <label>Address:</label>
+                <input type="text" name="address" required>
+                <br>              
+                <label>Username: </label>
+                <input type="text" name="username" required>
+                <br>
+                <label>Password: </label>
+                <input type="password" name="password" required>
+                <br>
+                <button type="submit">Register</button>
+                </form>
+        </div>
+    </div>
+
+    <div class="error">
+        {% if error %}
+            <p style ="color: red;">{{ error }}</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>
+
+<!-- PROFILE PAGE -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='profile.css') }}">
+</head>
+<body>
+    <a href="{{ url_for('home') }}" class="home-btn">Home</a>
+    <div class="container">
+        <nav class="sidebar">
+            <ul>
+                <li><a href="#user-info" class="active">User Info</a></li>
+                <li><a href="#edit-profile">Edit Profile</a></li>
+                <li><a href="#security">Security</a></li>
+                <li><a href="#billing">Billing</a></li>
+                <li><a href="#resume">Resume/Cover Letter</a></li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <section class="content" id="user-info">
+                <h2>User Info</h2>
+                <p><span class="label-bold">User ID:</span> {{ user.id }}</p>
+                <p><span class="label-bold">Name:</span> {{ user.first_name }} {{ user.last_name }}</p>
+                <p><span class="label-bold">Username:</span> {{ user.username }}</p>
+                <p><span class="label-bold">Degree:</span> {{ user.degree }}</p>
+                <p><span class="label-bold">Email:</span> {{ user.email }}</p>
+                <p><span class="label-bold">Address:</span> {{ user.address }}</p>
+                <a href="{{url_for('logout') }}">Logout</a>
+            </section>
+            <section class="content" id="edit-profile" style="display:none;">
+                <h2>Edit Profile</h2>
+                <form method="POST" action="{{ url_for('edit_profile') }}">
+                    <label>First Name:</label>
+                    <input type="text" name="first_name" value="{{ user.first_name }}" required>
+                    <br>
+                    <label>Last Name:</label>
+                    <input type="text" name="last_name" value="{{ user.last_name }}" required>
+                    <br>
+                    <label>Email:</label>
+                    <input type="email" name="email" value="{{ user.email }}" required>
+                    <br>
+                    <label>Degree:</label>
+                    <input type="text" name="degree" value="{{ user.degree }}" required>
+                    <br>
+                    <label>Address:</label>
+                    <input type="text" name="address" value="{{ user.address }}" required>
+                    <br>
+                    <label>Username:</label>
+                    <input type="text" name="username" value="{{ user.username }}" required>
+                    <br>
+                    <button type="submit">Save Changes</button>
+                </form>
+                {% if edit_message %}
+                    <p style="color:green;">{{ edit_message }}</p>
+                {% endif %}
+            </section>
+            <section class="content" id="security" style="display:none;">
+                <h2>Security</h2>
+                <form method="POST" action="{{ url_for('change_password') }}">
+                    <label for="current_password">Current Password:</label>
+                    <input type="password" name="current_password" required>
+                    <br>
+                    <label for="new_password">New Password:</label>
+                    <input type="password" name="new_password" required>
+                    <br>
+                    <label for="confirm_password">Confirm New Password:</label>
+                    <input type="password" name="confirm_password" required>
+                    <br>
+                    <button type="submit">Change Password</button>
+                </form>
+                {% if password_message %}
+                    <p style="color:green;">{{ password_message }}</p>
+                {% endif %}
+            </section>
+            <section class="content" id="billing" style="display:none;">
+                <h2>Billing</h2>
+                <p>Billing information goes here.</p>
+            </section>
+            <section class="content" id="resume" style="display:none;">
+                <h2>Resume/Cover Letter</h2>
+                <form class="resume-upload-form" method="POST" action="{{ url_for('upload_resume') }}" enctype="multipart/form-data">
+                    <label for="resume">Upload Resume (PDF):</label>
+                    <input type="file" name="resume" id="resume" accept="application/pdf" required>
+                    <button type="submit">Upload Resume</button>
+                    <div class="resume-links">
+                        {% if user.resume_filename %}
+                            <a href="{{ url_for('view_resume', user_id=user.id) }}" target="_blank">View My Resume</a>
+                        {% else %}
+                            <p>No resume uploaded yet.</p>
+                        {% endif %}
+                    </div>
+                </form>
+                <form class="cover-upload-form" method="POST" enctype="multipart/form-data">
+                    <label for="cover">Upload Cover Letter (PDF):</label>
+                    <input type="file" name="cover" id="cover" accept="application/pdf">
+                    <button type="submit">Upload Cover Letter</button>
+                    <div class="cover-links">
+                        {% if user.cover_filename %}
+                            <a href="{{ url_for('view_cover', user_id=user.id) }}" target="_blank">View My Cover Letter</a>
+                        {% else %}
+                            <p>No cover letter uploaded yet.</p>
+                        {% endif %}
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+    <script>
+        // Simple JS to switch tabs
+        const links = document.querySelectorAll('.sidebar a');
+        const sections = document.querySelectorAll('.main-content section');
+        links.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                links.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                sections.forEach(sec => sec.style.display = 'none');
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) target.style.display = 'block';
+            });
+        });
+        // Show first tab by default
+        sections[0].style.display = 'block';
+    </script>    
+</body>
+</html>
+
+<!-- SEARCH RESULTS PAGE -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}">
+</head>
+<body>
+    <div class="nav">
+        <div class="brand">
+            <h1>InternMate</h1>
+        </div>
+        <div class="tabs">
+            <ul>
+                <li><a href="{{url_for('home') }}">Home</a></li>
+                <li><a href="{{url_for('message') }}">Message</a></li>
+                <li><a href="{{url_for('application') }}">Applications</a></li>
+                <li><a href="{{url_for('history') }}">History</a></li>
+            </ul>
+        </div>
+        <div class="profile">
+            <a href="{{url_for('profile') }}">
+                <img src="{{ url_for('static', filename='assets/profile blank.jpg')}}" alt="profile pic">
+            </a>
+            <ul><li><a href="{{url_for('profile') }}">{{ user.username }}</a></li></ul>
+        </div>
+    </div>
+    <div class="search-bar-wrapper">
+        <div class="search_bar">
+            <form method="POST" action="{{ url_for('search') }}" class="search-bar-form">
+                <input type="text" name="query" placeholder="Search...">
+                <button type="submit">Search</button> <!--! Search button should take user to the search page and show the results-->
+            </form>
+        </div>
+            <div class="filter-btn-row">
+                <div class="filter-dropdown" id="filterDropdown">
+                    <button type="button" class="filter-btn" onclick="toggleFilterDropdown()">Filter Categories</button>
+                    <div class="filter-dropdown-content">
+                        <form id="filterForm" method="get" action="{{ url_for('search') }}">
+                            <input type="hidden" name="query" value="{{ query }}">
+                            <label><input type="checkbox" name="show_db" value="1" {% if show_db %}checked{% endif %}> Database Results</label>
+                            <label><input type="checkbox" name="show_companies" value="1" {% if show_companies %}checked{% endif %}> Companies</label>
+                            <label><input type="checkbox" name="show_requirements" value="1" {% if show_requirements %}checked{% endif %}> Requirements</label>
+                            <label><input type="checkbox" name="show_ideal" value="1" {% if show_ideal %}checked{% endif %}> Ideal Path</label>
+                            <button type="submit" class="filter-btn" style="margin-top:10px;">Apply</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+    </div>    
+    <div class="container">
+        <h2 class="result-header">Search Results for "{{ query }}"</h2>
+        <div class="results-container">
+            {% if db_results %}
+                <h3>Database Results</h3>
+                <ul class="results-list">
+                {% for result in db_results %}
+                    <li class="result-card">
+                        <div class="result-header">
+                            <h3>{{ result.job }}</h3>
+                            <span class="result-company">{{ result.company }}</span>
+                        </div>
+                        <div class="result-meta">
+                            <span class="result-location">{{ result.location }}</span>
+                        </div>
+                        <a class="result-link" href="{{ result.url }}" target="_blank">View</a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No results found in database.</p>
+            {% endif %}
+
+            {% for category in ['internships', 'companies', 'internship requirements', 'ideal internship and career path'] %}
+                <h3>{{ category|title }}</h3>
+                <ul class="results-list">
+                {% for result in google_results if result.category == category %}
+                    <li class="result-card">
+                        <h3>{{ result.title }}</h3>
+                        <p>{{ result.snippet }}</p>
+                        <a class="result-link" href="{{ result.link }}" target="_blank">View</a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endfor %}
+        </div>
+        {% if pagination and pagination.pages > 1 %}
+        <div class="pagination">
+            {% if pagination.has_prev %}
+                <a href="{{ url_for('search', query=query, page=page-1) }}">&laquo; Prev</a>
+            {% endif %}
+            {% for p in range(1, pagination.pages + 1) %}
+                {% if p == pagination.page %}
+                    <span class="current">{{ p }}</span>
+                {% else %}
+                    <a href="{{ url_for('search', query=query, page=p) }}">{{ p }}</a>
+                {% endif %}
+            {% endfor %}
+            {% if pagination.has_next %}
+                <a href="{{ url_for('search', query=query, page=page+1) }}">Next &raquo;</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    <script>
+        function toggleFilterDropdown() {
+            document.getElementById('filterDropdown').classList.toggle('show');
+        }
+        window.onclick = function(event) {
+            if (!event.target.matches('.filter-btn')) {
+                var dropdowns = document.getElementsByClassName("filter-dropdown");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+
+<!-- PASSWORD PAGES -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reset Password</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='reset_password.css') }}">
+</head>
+<body>
+    <h2>Reset Your Password</h2>
+    <form method="POST">
+        <label>New Password:</label>
+        <input type="password" name="new_password" required>
+        <button type="submit">Reset Password</button>
+    </form>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Forgot/Change Password</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='forgot_password.css') }}">
+</head>
+<body>
+    <h2>Forgot/Change Password</h2>
+    <form method="POST">
+        <label for="email">Enter your email:</label>
+        <input type="email" name="email" required>
+        <button type="submit">Send Reset Instructions</button>
+    </form>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+    <a href="{{ url_for('login') }}">Back to Login</a>
+</body>
+</html>
+
+<!-- MESSAGES PAGE (UNFINISHED) -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages</title>
+</head>
+<body>
+    <li><a href="{{url_for('home') }}">Home</a></li> <!--Home-->
+</body>
+</html>
+
+<!-- HISTORY PAGE (UNFINISHED) -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
+</head>
+<body>
+    <li><a href="{{url_for('home') }}">Home</a></li> <!--Home-->
+</body>
+</html>
