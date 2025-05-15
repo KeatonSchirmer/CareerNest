@@ -1,0 +1,58 @@
+
+Timeline 
+
+    Stage 1
+        - Create the backend (Flask) and integrate crawler
+            - APIs for data handling and crawler intergration
+        - Design SQL schema (PostgreSQL) for data storage
+    Stage 2
+        - Create basic structure for web app (React.js)
+            - User authentication
+            - Profile page
+            - Search functionality
+            - Message system
+        - Implement pages and style web app (Tailwind CSS)
+        - Create mobile app (React Native) use components from web app
+    Stage 3
+        - Connect frontend and backend with APIs
+            - Test functionality
+        - Deploy app (figure it out later)
+        - Monitor performance 
+            - Fix bugs 
+            - Get feedback for better user experience
+
+TO DO LIST
+
+    Crawler
+    - Split the crawler into sections that will be used
+    - Custom API function 1 is to automatically search for preset search using data from user
+    - Custom API function 2 is to give a search bar for specific search that user may want to find (Can only search for things that have to do with internship information)
+    - Predetermined crawler should automatically search every several hours
+
+    Database
+    - Create database for users
+    - Create database for the crawler
+
+    User
+    - Route for user
+    - Fetch user data from database
+    - Create html template using placeholders for specific user information
+    - Render template (jinja)
+
+    Search
+    - Connect search bar to database and custom API
+    - Create optional filters (date, location, etc.)
+    - Create the automation button
+    - Results should be automatically filtered by date posted
+    - Each result should have a individual page that gives more information and has the apply button and company page link
+
+    Message
+    - Determine how messages should work (unique message board, or connect to email)
+
+    History
+    - Unique to user
+    - Search results history
+
+    Application Progress
+    - Table showing progress of application (reviewing, rejected, interview, offered)
+    - Figure out how to actually apply programmically 

@@ -1,0 +1,90 @@
+/*? Top bar */
+.nav{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: auto;
+    background-color: #f8f9fa;
+    color: #333;
+}
+.brand{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    font-size: larger;
+    color: #007bff;
+}
+.tabs{
+    display: flex;
+    align-items: center;
+    width: 60%;
+    justify-content: center;
+    text-align: center;
+    font-size: large;
+    padding: 15px;
+    margin: 15px;
+    font-size: larger;
+}
+.profile{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    margin: 0%;
+    font-size: large;
+}
+.profile img{
+    width: 50px;
+    border-radius: 50px;
+}
+a{
+    text-decoration: none;
+    font-weight: bolder;
+    color: #007bff;   
+}
+a:hover{
+    color: #0056b3;
+}
+ul{
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 25px;
+}
+.search_bar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: x-large;
+    width: 100%;
+    margin: auto;
+    padding-top: 15px;
+}
+.search_bar input[type="text"] {
+    padding: 15px 20px;
+    font-size: 1.2rem;
+    border-radius: 25px;      /* Makes the corners round */
+    border: 1px solid #ccc;
+    outline: none;
+    width: 350px;             /* Makes the box bigger */
+    margin-right: 10px;
+    box-sizing: border-box;
+}
+
+.search_bar button {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    border-radius: 25px;      /* Makes the button round */
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.search_bar button:hover {
+    background-color: #0056b3;
+}

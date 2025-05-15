@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}">
+</head>
+<body>
+    <div class="nav">
+        <div class="brand">
+            <h1>InternMate</h1>
+        </div>
+        <div class="tabs">
+            <ul>
+                <li><a href="{{url_for('home') }}">Home</a></li>
+                <li><a href="{{url_for('message') }}">Message</a></li>
+                <li><a href="{{url_for('application') }}">Applications</a></li>
+                <li><a href="{{url_for('history') }}">History</a></li>
+            </ul>
+        </div>
+        <div class="profile">
+            <a href="{{url_for('profile') }}">
+                <img src="{{ url_for('static', filename='assets/profile blank.jpg')}}" alt="profile pic">
+            </a>
+            <ul><li><a href="{{url_for('profile') }}">{{ user.username }}</a></li></ul>
+        </div>
+    </div>
+    <div class="search-bar-wrapper">
+        <div class="search_bar">
+            <form method="POST" action="{{ url_for('search') }}" class="search-bar-form">
+                <input type="text" name="query" placeholder="Search...">
+                <button type="submit">Search</button> <!--! Search button should take user to the search page and show the results-->
+            </form>
+        </div>
+            <div class="filter-btn-row">
+                <div class="filter-dropdown" id="filterDropdown">
+                    <button type="button" class="filter-btn" onclick="toggleFilterDropdown()">Filter Categories</button>
+                    <div class="filter-dropdown-content">
+                        <form id="filterForm" method="get" action="{{ url_for('search') }}">
+                            <input type="hidden" name="query" value="{{ query }}">
+                            <label><input type="checkbox" name="show_db" value="1" {% if show_db %}checked{% endif %}> Database Results</label>
+                            <label><input type="checkbox" name="show_companies" value="1" {% if show_companies %}checked{% endif %}> Companies</label>
+                            <label><input type="checkbox" name="show_requirements" value="1" {% if show_requirements %}checked{% endif %}> Requirements</label>
+                            <label><input type="checkbox" name="show_ideal" value="1" {% if show_ideal %}checked{% endif %}> Ideal Path</label>
+                            <button type="submit" class="filter-btn" style="margin-top:10px;">Apply</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+    </div>    
+    <div class="container">
+        <h2 class="result-header">Search Results for "{{ query }}"</h2>
+        <div class="results-container">
+            {% if db_results %}
+                <h3>Database Results</h3>
+                <ul class="results-list">
+                {% for result in db_results %}
+                    <li class="result-card">
+                        <div class="result-header">
+                            <h3>{{ result.job }}</h3>
+                            <span class="result-company">{{ result.company }}</span>
+                        </div>
+                        <div class="result-meta">
+                            <span class="result-location">{{ result.location }}</span>
+                        </div>
+                        <a class="result-link" href="{{ result.url }}" target="_blank">View</a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No results found in database.</p>
+            {% endif %}
+
+            {% for category in ['internships', 'companies', 'internship requirements', 'ideal internship and career path'] %}
+                <h3>{{ category|title }}</h3>
+                <ul class="results-list">
+                {% for result in google_results if result.category == category %}
+                    <li class="result-card">
+                        <h3>{{ result.title }}</h3>
+                        <p>{{ result.snippet }}</p>
+                        <a class="result-link" href="{{ result.link }}" target="_blank">View</a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endfor %}
+        </div>
+        {% if pagination and pagination.pages > 1 %}
+        <div class="pagination">
+            {% if pagination.has_prev %}
+                <a href="{{ url_for('search', query=query, page=page-1) }}">&laquo; Prev</a>
+            {% endif %}
+            {% for p in range(1, pagination.pages + 1) %}
+                {% if p == pagination.page %}
+                    <span class="current">{{ p }}</span>
+                {% else %}
+                    <a href="{{ url_for('search', query=query, page=p) }}">{{ p }}</a>
+                {% endif %}
+            {% endfor %}
+            {% if pagination.has_next %}
+                <a href="{{ url_for('search', query=query, page=page+1) }}">Next &raquo;</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    <script>
+        function toggleFilterDropdown() {
+            document.getElementById('filterDropdown').classList.toggle('show');
+        }
+        window.onclick = function(event) {
+            if (!event.target.matches('.filter-btn')) {
+                var dropdowns = document.getElementsByClassName("filter-dropdown");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
